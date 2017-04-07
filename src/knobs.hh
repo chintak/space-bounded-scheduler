@@ -29,7 +29,7 @@
 
 #define LOG 1
 
-#define COUNTERS_ENABLED 1
+#define COUNTERS_ENABLED 0
 
 #define PRECISION_TICKS 1
 #define PRECISION_NANOSEC 2

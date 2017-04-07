@@ -4,7 +4,7 @@ include ./knobs
 SOURCES = Thread.cc ThreadPool.cc Job.cc Fork.cc Scheduler.cc Thread.hh ThreadPool.hh Job.hh Fork.hh Scheduler.hh 
 OBJECTS = Thread.o ThreadPool.o Job.o Fork.o Scheduler.o test.o
 
-HOSTNAME = $(shell uname -n | tr "." "\n" | head -n 1) 
+HOSTNAME = stampede  # $(shell uname -n | tr "." "\n" | head -n 1) 
 
 MEMFLAGS = -D HUGE_PAGE_SIZE=$(HUGE_PAGE_SIZE) -D STRIPE_SOCKETS=$(STRIPE_SOCKETS)
 DFLAGS = -D FIND_MACHINE=$(HOSTNAME) -D STRAND_SIZE_MODE=$(STRAND_SIZE_MODE) $(MEMFLAGS)
