@@ -1,0 +1,34 @@
+import os
+from subprocess import Popen, PIPE
+import sys
+
+# collect-data.py <#runs> <prog> <"input params">
+
+args = sys.argv
+path = args[2]
+scheds = ["W", "P", "2", "5"]
+
+active_time = []
+overhead = []
+l3_misses = []
+
+for sched in scheds:
+for runs in range(0, int(args[1])):
+  command = "sudo "+ path + " " + sched + " " + args[3]
+  print command
+  process = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
+  exit_code = os.waitpid(process.pid, 0)
+  output = str(process.communicate()[0]).splitlines()
+  for line in output:
+    if line.startswith("ms_Active: "):
+      words =  line.split(" ")
+      active_time.append(int(words[1]))
+      print active_time
+    if line.startswith("ms_Overhead: "):
+      words =  line.split(" ")
+      overhead.append(int(words[1]))
+      print overhead
+    if line.startswith("L3_MISSES: "):
+      words =  line.split(" ")
+      l3_misses.append(int(words[1]))
+      print l3_misses
