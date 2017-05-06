@@ -92,14 +92,6 @@
   int block_sizes[2] = {8, 8};			\
   uint map[8] = {0,1,2,3,4,5,6,7};
 
-#define teach_twosockets int num_procs=16;                    \
-		int num_levels = 3;                            \
-		int fan_outs[4] = {2,8,1,1};                        \
-		lluint sizes[4] = {0, 3*(1<<23), 1<<18, 1<<15};            \
-		int block_sizes[4] = {64,64,64,64};                    \
-		uint map[16] = {0,4,8,12,16,20,24,28,                    \
-						1,5,9,13,17,21,25,29};
-
 #define DUBIOUS int num_procs=32;		\
   int num_levels = 4;				\
   int fan_outs[4] = {2,2,4,2};			\
