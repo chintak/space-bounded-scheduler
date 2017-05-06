@@ -1,3 +1,8 @@
 *.o
 *.p
 *.x
+*.a
+*/test.o*
+logs/*
+*/cscope.*
+cscope.*

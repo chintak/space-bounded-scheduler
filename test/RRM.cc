@@ -29,6 +29,7 @@
 #include "machine-config.hh"
 #include "sequence-jobs.hh"
 #include "parse-args.hh"
+#include "utils.hh"
 
 template <class AT, class BT, class F>
 class RepeatedMap : public HR2Job {
@@ -137,14 +138,17 @@ main (int argv, char **argc) {
   }
 
   flush_cache(num_procs,sizes[1]);
-  std::cout<<"Len: "<<LEN<<" Repeats: "<<repeats<<" Cut_Ratio: "<<cut_ratio<<std::endl;
+  std::cout<<"Len: "<<LEN<<"\nRepeats: "<<repeats<<" Cut_Ratio: "<<cut_ratio<<std::endl;
  
   Scheduler *sched=create_scheduler (argv, argc);
+
   startTime();
+  START_PAPI_COUNTER;
   tp_init (num_procs, map, sched,
 	   new RecursiveRepeatedMap<double, plusOne<double> >(A, B, LEN, plusOne<double>(),repeats, ((double)cut_ratio)/100.0,0.5));
 
   tp_sync_all ();
+  READ_PAPI_COUNTER;
   nextTime("Total time, measured from driver program");
   
   //free_hugetlb(hugepage_id);

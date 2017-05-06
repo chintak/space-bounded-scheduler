@@ -31,6 +31,7 @@
 #include "machine-config.hh"
 #include "quickSort.hh"
 #include "parse-args.hh"
+#include "utils.hh"
 
 typedef double E;
 
@@ -64,14 +65,16 @@ main (int argv, char **argc) {
   SizedJob* rootJob = new QuickSort<E, std::less<E> >
     (A,LEN,std::less<E>(),
      compared, less_pos, more_pos, B);
-  std::cout<<"Len: "<<LEN<<std::endl;  
+  std::cout<<"Len: "<<LEN << std::endl;  
   std::cout<<"Root Job Size: "<<rootJob->size(64)/1000000<<"MB"<<std::endl;
 
   flush_cache(num_procs,sizes[1]);  
 
   startTime();
+  START_PAPI_COUNTER;
   tp_init (num_procs, map, sched, rootJob);
   tp_sync_all ();
+  READ_PAPI_COUNTER;
   nextTime("QuickSort, measured from driver program");
 
   std::cout<<"Checking: "<<std::endl;

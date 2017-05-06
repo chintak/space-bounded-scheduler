@@ -29,6 +29,7 @@
 #include "machine-config.hh"
 #include "sequence-jobs.hh"
 #include "parse-args.hh"
+#include "utils.hh"
 
 int
 main (int argv, char **argc) {
@@ -40,18 +41,19 @@ main (int argv, char **argc) {
     A[i] = i;   B[i] = 0;
   }
 
-
   FIND_MACHINE;
   Scheduler *sched=create_scheduler (argv, argc);
   flush_cache(num_procs,sizes[1]);  
   std::cout<<"Len: "<<LEN<<std::endl;
+  
+  START_PAPI_COUNTER;
   startTime();
   tp_init (num_procs, map, sched,
 	   new Map<double, double, plusOne<double> >(A, B, LEN, plusOne<double>()));
-
   tp_sync_all ();
   nextTime("Total time, measured from driver program");
-  
+  READ_PAPI_COUNTER;
+
   /*  double check = 0.0;
   for(int i=0; i<LEN; i++) {
      check += *A_ptr[i] + *B_ptr[i];

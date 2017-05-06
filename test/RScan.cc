@@ -7,7 +7,7 @@
 #include "machine-config.hh"
 #include "sequence-jobs.hh"
 #include "parse-args.hh"
-
+#include "utils.hh"
 
 template <class E, class F>
 class RecursiveScan : public HR2Job {
@@ -69,15 +69,16 @@ main (int argv, char **argc) {
   Scheduler *sched=create_scheduler (argv, argc);
   
   std::cout<<"Len: "<<LEN<<std::endl;
+
+  START_PAPI_COUNTER;
   startTime();
   tp_init (num_procs, map, sched,
 	   //new Scan<double,plus<double> > (&sum, A,A,LEN,plus<double>(),0.0));
 	   new RecursiveScan<double,plus<double> > (A,B,LEN,plus<double>(),0.0));
-
-
   tp_sync_all ();
   nextTime("Total time, measured from driver program");
-  
+  READ_PAPI_COUNTER;
+
   // std::cout<<"Checksum: "<<B[LEN-1]<<" Last element: "<<sum<<std::endl;
 }
 

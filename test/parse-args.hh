@@ -6,8 +6,8 @@ print_usage () {
       std::cerr<<"Usage: cmd <Sched:W/P/H/2/3/4> <args>"<<std::endl;
 }
 
-//FIND_MACHINE;
-monster_4x16;
+FIND_MACHINE;
+//monster_4x16;
 
 Scheduler*
 create_scheduler (int argv, char **argc) {

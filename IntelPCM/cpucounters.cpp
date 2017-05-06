@@ -698,7 +698,7 @@ PCM::PCM() :
     }
 #endif
         #endif //end of ifdef _MSC_VER
-
+#ifdef PRINT_HW_INFO
     std::cout << "Num (logical) cores: " << num_cores << std::endl;
     std::cout << "Num sockets: " << num_sockets << std::endl;
     std::cout << "Threads per core: " << threads_per_core << std::endl;
@@ -710,11 +710,12 @@ PCM::PCM() :
         std::cout << "Number of core PMU fixed counters: " << core_fixed_counter_num_max << std::endl;
         std::cout << "Width of fixed counters: " << core_fixed_counter_width << " bits" << std::endl;
     }
+#endif
 
     socketRefCore.resize(num_sockets);
 #ifndef __APPLE__
     MSR = new MsrHandle *[num_cores];
-    
+
     try
     {
         for (i = 0; i < num_cores; ++i)
@@ -725,6 +726,7 @@ PCM::PCM() :
     }
     catch (...)
     {
+      /*
         // failed
         for (int j = 0; j < i; j++)
             delete MSR[j];
@@ -736,11 +738,12 @@ PCM::PCM() :
         std::cerr << "You must have signed msr.sys driver in your current directory and have administrator rights to run this program." << std::endl;
                 #elif defined(__linux__)
         std::cerr << "Try to execute 'modprobe msr' as root user and then" << std::endl;
-        std::cerr << "you also must have read and write permissions for /dev/cpu/*/msr devices (/dev/msr* for Android). The 'chown' command can help." << std::endl;
+        std::cerr << "you also must have read and write permissions for /dev/cpu//msr devices (/dev/msr* for Android). The 'chown' command can help." << std::endl;
                 #elif defined(__FreeBSD__)
         std::cerr << "Ensure cpuctl module is loaded and that you have read and write" << std::endl;
         std::cerr << "permissions for /dev/cpuctl* devices (the 'chown' command can help)." << std::endl;
                 #endif
+      */
     }
 #else
     for(i = 0; i < num_cores; ++i)
@@ -769,8 +772,9 @@ PCM::PCM() :
 		destroyMSR();
 		return;
         }
-
+#if PRINT_HW_INFO
         std::cout << "Nominal core frequency: " << nominal_frequency << " Hz" << std::endl;
+#endif
     }
 
     if(packageEnergyMetricsAvailable() && MSR)
@@ -789,9 +793,11 @@ PCM::PCM() :
         pkgMinimumPower = (uint32) (double(extract_bits(package_power_info, 16, 30))*wattsPerPowerUnit);
         pkgMaximumPower = (uint32) (double(extract_bits(package_power_info, 32, 46))*wattsPerPowerUnit);
 
+#if PRINT_HW_INFO
         std::cout << "Package thermal spec power: "<< pkgThermalSpecPower << " Watt; ";
         std::cout << "Package minimum power: "<< pkgMinimumPower << " Watt; ";
         std::cout << "Package maximum power: "<< pkgMaximumPower << " Watt; " << std::endl;
+#endif
 
         if(snb_energy_status.empty())
 	    for (i = 0; i < num_sockets; ++i)
@@ -813,6 +819,7 @@ PCM::PCM() :
         }
         catch (...)
         {
+	  /*
             // failed
             for (int j = 0; j < i; j++)
                 delete jkt_uncore_pci[j];
@@ -829,6 +836,7 @@ PCM::PCM() :
             //std::cerr << "you must have read permission for /sys/firmware/acpi/tables/MCFG device (the 'chmod' command can help)."<< std::endl;
             std::cerr << "You must be root to access these SNB-EP counters in PCM. " << std::endl;
                 #endif
+	  */
         }
     } else if((cpu_model == SANDY_BRIDGE || cpu_model == IVY_BRIDGE) && MSR != NULL)
     {

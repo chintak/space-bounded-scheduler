@@ -54,7 +54,6 @@ printDiff (int N) {
 
 PCM* init_pcm () {
   PCM *m = PCM::getInstance();
-
   if (!m->good())    {
       cout << "Can not access CPU counters" << endl;
       cout << "Try to execute 'modprobe msr' as root user and then" << endl;

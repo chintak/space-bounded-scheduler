@@ -12,7 +12,7 @@ DFLAGS = -D FIND_MACHINE=$(HOSTNAME) -D STRAND_SIZE_MODE=$(STRAND_SIZE_MODE) $(M
 CPFLAGS = $(CFLAGS) $(PFLAGS)
 
 EXECS = GatherScatter SimulatedMM Map RRM RRG RGS RScan quickSort quickSort2 awareSampleSort sampleSort test matMul mklMatMul quadTreeSort quadTreeSort2  # thrtest intSort jTest numProcTest testprof
-CILK_EXECS = Cilk-RRM Cilk-RRG
+# CILK_EXECS = Cilk-RRM Cilk-RRG
 
 %.o:	%.cc collect.hh matMul.hh quickSort.hh quickHull.hh quickSort2.hh common.hh sequence.hh sequence-jobs.hh transpose.hh intSort.hh sampleSort.hh quadTreeSort.hh quadTreeSort2.hh libperf.h getperf.hh affinity.hh parse-args.hh machine-config.hh
 	$(CCP) -c $(CFLAGS) $(DFLAGS) $(PFLAGS) $(IFLAGS) $< -o $@ 

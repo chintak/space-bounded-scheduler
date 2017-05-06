@@ -64,6 +64,7 @@ printDiff () {
 void initPCM () {
     m = PCM::getInstance();
     if (!m->good())    {
+        cout << "DEBUG initPCM\n";
         cout << "Can not access CPU counters" << endl;
         cout << "Try to execute 'modprobe msr' as root user and then" << endl;
         cout << "you also must have read and write permissions for /dev/cpu/?/msr devices (the 'chown' command can help).";

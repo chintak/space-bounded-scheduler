@@ -27,9 +27,9 @@
 #ifndef SCHED_KNOBS 
 #define SCHED_KNOBS
 
-#define LOG 1
+#define LOG 0
 
-#define COUNTERS_ENABLED 0
+#define COUNTERS_ENABLED false
 
 #define PRECISION_TICKS 1
 #define PRECISION_NANOSEC 2

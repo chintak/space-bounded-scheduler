@@ -1,7 +1,7 @@
 
 include ../config.mk
 
-HEADERS = Thread.hh ThreadPool.hh Fork.hh Job.hh Scheduler.hh syncQueue.hh HR1Scheduler.hh HR2Scheduler.hh HR3Scheduler.hh HR4Scheduler.hh $(COUNTERDIR)/test.h
+HEADERS = Thread.hh ThreadPool.hh Fork.hh Job.hh Scheduler.hh syncQueue.hh HR1Scheduler.hh HR2Scheduler.hh HR3Scheduler.hh HR4Scheduler.hh $(COUNTERDIR)/test.h knobs.hh
 IMPLEMENTATION = Thread.cc DecentralThreadPool.cc DecentralFork.cc Job.cc DecentralScheduler.cc WSScheduler.cc HR1Scheduler.cc HR2Scheduler.cc HR3Scheduler.cc HR4Scheduler.cc 
 MONITORS =  gettime.hh threadTimers.hh 
 

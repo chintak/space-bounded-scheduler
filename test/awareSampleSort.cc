@@ -27,6 +27,7 @@
 #include "ThreadPool.hh"
 #include "quickSort2.hh"
 #include "parse-args.hh"
+#include "utils.hh"
 using namespace std;
 
 template <class ET, class F> 
@@ -237,12 +238,14 @@ int main (int argv, char **argc) {
 
   Scheduler *sched=create_scheduler (argv, argc);
   flush_cache(num_procs,sizes[1]);  
-  cout<<"Len: "<<LEN<<endl;
+  cout << "Len: " << LEN << endl;
   startTime();
+  START_PAPI_COUNTER;
   tp_init (num_procs, map, sched,
 	   new SampleSort<E,less<E> >(A, B, counts, bucketId, numBlocks, 
 				      numBuckets, LEN, less<E>()));
   tp_sync_all ();
+  READ_PAPI_COUNTER;
   nextTime("Total time, measured from driver program");
 
   std::cout<<"Checking: "<<std::endl;

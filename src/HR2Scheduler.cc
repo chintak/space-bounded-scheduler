@@ -30,17 +30,17 @@
 HR2Scheduler::Cluster::Cluster (const lluint size, const int block_size,
 				int num_children, int sibling_id,
 				Cluster * parent, Cluster ** children)
-  : _size (size),
-    _block_size (block_size),
-    _occupied(0),
-    _num_children(num_children),
-    _sibling_id(sibling_id),
-    _parent(parent),
-    _locked_thread_id (-1) {
-    _children = new Cluster* [_num_children];
-  if (children!=NULL)
-    for (int i=0; i<_num_children; ++i)
-      _children[i]=children[i];
+	: _size (size),
+	  _block_size (block_size),
+	  _occupied(0),
+	  _num_children(num_children),
+	  _sibling_id(sibling_id),
+	  _parent(parent),
+	  _locked_thread_id (-1) {
+	_children = new Cluster* [_num_children];
+	if (children!=NULL)
+		for (int i=0; i<_num_children; ++i)
+			_children[i]=children[i];
 }
 
 HR2Scheduler::Cluster*
@@ -49,48 +49,48 @@ HR2Scheduler::Cluster::create_tree( Cluster * root,
 				    int num_levels, uint * fan_outs,
 				    lluint * sizes, uint * block_sizes,
 				    int bucket_version) {
-  static int leaf_counter=0;
+	static int leaf_counter=0;
 
-  Cluster * ret;
-  if (root == NULL) { // Create the root (RAM) node
-    ret = new Cluster (1<<((sizeof(lluint)*4)-1) -1, block_sizes[0],
-		       fan_outs[0], 0);
-    if (bucket_version==0)
-      ret->_buckets = new Buckets<HR2Job*> (num_levels,0,*block_sizes,sizes,*fan_outs,SIGMA);
-    else if (bucket_version==1)
-      ret->_buckets = new TopDistrBuckets<HR2Job*> (num_levels,0,*block_sizes,sizes,*fan_outs,SIGMA);
-    else
-      exit(-1);
+	Cluster * ret;
+	if (root == NULL) { // Create the root (RAM) node
+		ret = new Cluster (1<<((sizeof(lluint)*4)-1) -1, block_sizes[0],
+				   fan_outs[0], 0);
+		if (bucket_version==0)
+			ret->_buckets = new Buckets<HR2Job*> (num_levels,0,*block_sizes,sizes,*fan_outs,SIGMA);
+		else if (bucket_version==1)
+			ret->_buckets = new TopDistrBuckets<HR2Job*> (num_levels,0,*block_sizes,sizes,*fan_outs,SIGMA);
+		else
+			exit(-1);
 
-    leaf_counter = 0;
-    for (int i=0; i<fan_outs[0]; ++i) {
-       ret->_children[i] = create_tree (ret, leaf_array,
-					num_levels-1, fan_outs+1,
-					sizes+1, block_sizes+1,bucket_version);
-       ret->_children[i]->_sibling_id = i;
-    }
-  } else if (num_levels>0) {
-    ret = new Cluster (sizes[0], block_sizes[0],
-		       fan_outs[0], -1, root);
-    if (bucket_version==0)
-      ret->_buckets = new Buckets<HR2Job*> (num_levels,*sizes,*block_sizes,sizes,*fan_outs,SIGMA);
-    else if (bucket_version==1)
-      ret->_buckets = new TopDistrBuckets<HR2Job*> (num_levels,*sizes,*block_sizes,sizes,*fan_outs,SIGMA);
-    else
-      exit(-1);
+		leaf_counter = 0;
+		for (int i=0; i<fan_outs[0]; ++i) {
+			ret->_children[i] = create_tree (ret, leaf_array,
+							 num_levels-1, fan_outs+1,
+							 sizes+1, block_sizes+1,bucket_version);
+			ret->_children[i]->_sibling_id = i;
+		}
+	} else if (num_levels>0) {
+		ret = new Cluster (sizes[0], block_sizes[0],
+				   fan_outs[0], -1, root);
+		if (bucket_version==0)
+			ret->_buckets = new Buckets<HR2Job*> (num_levels,*sizes,*block_sizes,sizes,*fan_outs,SIGMA);
+		else if (bucket_version==1)
+			ret->_buckets = new TopDistrBuckets<HR2Job*> (num_levels,*sizes,*block_sizes,sizes,*fan_outs,SIGMA);
+		else
+			exit(-1);
 
-    for (int i=0; i<fan_outs[0]; ++i) {
-      ret->_children[i] = create_tree (ret, leaf_array,
-				       num_levels-1, fan_outs+1,
-				       sizes+1, block_sizes+1,bucket_version);
-      ret->_children[i]->_sibling_id = i;
-    }
-  } else {
-    ret = new Cluster (0, 1, 1, -1, root); // L0 cache/register
+		for (int i=0; i<fan_outs[0]; ++i) {
+			ret->_children[i] = create_tree (ret, leaf_array,
+							 num_levels-1, fan_outs+1,
+							 sizes+1, block_sizes+1,bucket_version);
+			ret->_children[i]->_sibling_id = i;
+		}
+	} else {
+		ret = new Cluster (0, 1, 1, -1, root); // L0 cache/register
 
-    leaf_array[leaf_counter++] = ret;
-  }
-  return ret;
+		leaf_array[leaf_counter++] = ret;
+	}
+	return ret;
 }
 
 void
@@ -102,11 +102,11 @@ HR2Scheduler::print_tree( Cluster * root,
 			std::cout<<"\t\t";
 		std::cout<<"Occ:"<<root->_occupied<<" | ";
 		if (root->is_locked())
-		  std::cout<<"L | ";
+			std::cout<<"L | ";
 		else
-		  std::cout<<"U | ";
+			std::cout<<"U | ";
 		for (int i=0; i<root->_buckets->_num_levels; ++i)
-		    std::cout<<root->_buckets->_queues[i]->size()<<",";
+			std::cout<<root->_buckets->_queues[i]->size()<<",";
 		std::cout<<std::endl;
 
 		for (int i=0; i<root->_num_children; ++i)
@@ -132,7 +132,7 @@ HR2Scheduler::print_job (HR2Job* sized_job) {
 HR2Scheduler::HR2Scheduler (int num_threads, int num_levels,
 			    int * fan_outs, lluint * sizes,
 			    int * block_sizes, int bucket_version)
-: Scheduler (num_threads) {
+  : Scheduler (num_threads) {
         _type = 0;
 	std::cout<<_type<<std::endl;
 
@@ -178,38 +178,38 @@ HR2Scheduler::~HR2Scheduler() {
 // Basic sanity check on locks held by a thread
 void
 HR2Scheduler::check_lock_consistency (int thread_id) {
-  for (int i=0; i<_tree->_num_levels+1; ++i) {
-    if (i<_tree->_num_locks_held[thread_id])
-      assert (_tree->_locked_clusters[thread_id][i] != NULL);
-    else
-      assert (_tree->_locked_clusters[thread_id][i] == NULL);
+	for (int i=0; i<_tree->_num_levels+1; ++i) {
+		if (i<_tree->_num_locks_held[thread_id])
+			assert (_tree->_locked_clusters[thread_id][i] != NULL);
+		else
+			assert (_tree->_locked_clusters[thread_id][i] == NULL);
 
-    if (i != _tree->_num_levels+1)
-      if (_tree->_locked_clusters[thread_id][i] != NULL)
-	assert  (_tree->_locked_clusters[thread_id][i]
-		 != _tree->_locked_clusters[thread_id][i+1]);
-  }
+		if (i != _tree->_num_levels+1)
+			if (_tree->_locked_clusters[thread_id][i] != NULL)
+				assert  (_tree->_locked_clusters[thread_id][i]
+					 != _tree->_locked_clusters[thread_id][i+1]);
+	}
 }
 
 // Lock up 'node', and add that lock to the locked up node list
 void
 HR2Scheduler::lock (Cluster* node, int thread_id) {
-  // std::cout<<"Lock, thr: "<<thread_id<<" "<<node<<std::endl;
+	// std::cout<<"Lock, thr: "<<thread_id<<" "<<node<<std::endl;
         if (node->_num_children > 1) {
-	      node->lock();
+		node->lock();
 
 		assert(node->_locked_thread_id == -1);
 		node->_locked_thread_id = thread_id;
 
-	      _tree->_locked_clusters[thread_id][_tree->_num_locks_held[thread_id]] = node;
-	      ++_tree->_num_locks_held[thread_id];
+		_tree->_locked_clusters[thread_id][_tree->_num_locks_held[thread_id]] = node;
+		++_tree->_num_locks_held[thread_id];
 	}
 }
 
 bool
 HR2Scheduler::has_lock (Cluster* node, int thread_id) {
 //  std::cerr<<__func__<<": Not currently operational"<<std::endl;
-  return (node->_num_children==1 || node->_locked_thread_id == thread_id);
+	return (node->_num_children==1 || node->_locked_thread_id == thread_id);
 }
 
 void
@@ -217,7 +217,7 @@ HR2Scheduler::print_locks (int thread_id) {
 	std::cout<<"Thread "<<thread_id<<" has "<<_tree->_num_locks_held[thread_id]
 		 <<" locks: ";
 	for (int i=0; i<_tree->_num_locks_held[thread_id]; ++i) {
-	  std::cout<<" '"<<_tree->_locked_clusters[thread_id][i];
+		std::cout<<" '"<<_tree->_locked_clusters[thread_id][i];
 	}
 	std::cout<<std::endl;
 }
@@ -226,31 +226,31 @@ HR2Scheduler::print_locks (int thread_id) {
 // Check if the node is the last in the list of locked nodes,
 void
 HR2Scheduler::unlock (Cluster* node, int thread_id) {
-  //std::cout<<"Unlock, thr: "<<thread_id<<" "<<node<<std::endl;
-  if (node->_num_children > 1) {
-	   --_tree->_num_locks_held[thread_id];
-	   _tree->_locked_clusters[thread_id][_tree->_num_locks_held[thread_id]] = NULL;
+	//std::cout<<"Unlock, thr: "<<thread_id<<" "<<node<<std::endl;
+	if (node->_num_children > 1) {
+		--_tree->_num_locks_held[thread_id];
+		_tree->_locked_clusters[thread_id][_tree->_num_locks_held[thread_id]] = NULL;
 
-	     assert(node->_locked_thread_id == thread_id);
-	     node->_locked_thread_id = -1;
+		assert(node->_locked_thread_id == thread_id);
+		node->_locked_thread_id = -1;
 
-	   node->unlock();
-	 }
+		node->unlock();
+	}
 }
 
 // Release all locks held by thread in the inverse order they were obtained
 void
 HR2Scheduler::release_locks (int thread_id) {
-  while (_tree->_num_locks_held[thread_id] > 0)
-    unlock (_tree->_locked_clusters[thread_id][_tree->_num_locks_held[thread_id]-1], thread_id);
+	while (_tree->_num_locks_held[thread_id] > 0)
+		unlock (_tree->_locked_clusters[thread_id][_tree->_num_locks_held[thread_id]-1], thread_id);
 }
 
 /* Should be called only by a thread holding a lock on the current cluster */
 void
 HR2Scheduler::pin (HR2Job *job, Cluster *cluster) {
 
-  assert (cluster->_occupied <= cluster->_size);
-  job->pin_to_cluster (cluster, job->size(cluster->_block_size));
+	assert (cluster->_occupied <= cluster->_size);
+	job->pin_to_cluster (cluster, job->size(cluster->_block_size));
 }
 
 void
@@ -282,7 +282,7 @@ HR2Scheduler::add (Job* uncast_job, int thread_id) {
 	int child_id=0;
 	for (Cluster * cur = _tree->_leaf_array[thread_id];;cur = cur->_parent ) {
 		if (job->get_pin_cluster() == cur)  {
-		  cur->_buckets->add_job_to_bucket (job, child_id);
+			cur->_buckets->add_job_to_bucket (job, child_id);
 			return;
 		}
 		child_id = cur->_sibling_id;
@@ -300,10 +300,10 @@ HR2Scheduler::add_multiple (int num_jobs, Job** uncast_jobs, int thread_id) {
 	if (thread_id == _num_threads) {
 	        root->lock ();
 		for (int i=0; i<num_jobs; ++i) {
-		  job = (HR2Job*)uncast_jobs[i];
-		  pin (job, root);
-		  root->_occupied+=job->size(root->_block_size);
-		  root->_buckets->add_job_to_bucket (job, 0);
+			job = (HR2Job*)uncast_jobs[i];
+			pin (job, root);
+			root->_occupied+=job->size(root->_block_size);
+			root->_buckets->add_job_to_bucket (job, 0);
 		}
 		root->unlock ();
 		return;
@@ -315,10 +315,10 @@ HR2Scheduler::add_multiple (int num_jobs, Job** uncast_jobs, int thread_id) {
 			lock (cur, thread_id);
 
 		for (int i=0; i<num_jobs; ++i) {
-		  job = (HR2Job*)uncast_jobs[i];
+			job = (HR2Job*)uncast_jobs[i];
 
-		  pin (job, root);
-		  root->_occupied+=job->size(root->_block_size);
+			pin (job, root);
+			root->_occupied+=job->size(root->_block_size);
 		}
 		release_locks (thread_id);
 	}
@@ -327,11 +327,11 @@ HR2Scheduler::add_multiple (int num_jobs, Job** uncast_jobs, int thread_id) {
 	int child_id=0;
 	for (Cluster * cur = _tree->_leaf_array[thread_id];;cur = cur->_parent ) {
 		if (job->get_pin_cluster() == cur)  {
-		  for (int i=0; i<num_jobs; ++i) {
-		    job = (HR2Job*)uncast_jobs[i];
-		    cur->_buckets->add_job_to_bucket (job, child_id);
-		  }
-		  return;
+			for (int i=0; i<num_jobs; ++i) {
+				job = (HR2Job*)uncast_jobs[i];
+				cur->_buckets->add_job_to_bucket (job, child_id);
+			}
+			return;
 		}
 		child_id = cur->_sibling_id;
 	}
@@ -348,68 +348,68 @@ HR2Scheduler::done (Job *uncast_job, int thread_id, bool deactivate) {
 
 	/* Update occupied size */
 	for ( ; cur!=pin; cur=cur->_parent) {
-	  lluint strand_size = job->strand_size(cur->_block_size);
-	  lock (cur,thread_id);
-	  cur->_occupied -= (strand_size>(int)(MU*(cur->_size)) ? (int)(MU*(cur->_size)) : strand_size);
+		lluint strand_size = job->strand_size(cur->_block_size);
+		lock (cur,thread_id);
+		cur->_occupied -= (strand_size>(int)(MU*(cur->_size)) ? (int)(MU*(cur->_size)) : strand_size);
 	}
 
 	/* If the done task started a pin, clean up the allocation */
 	if (deactivate) {  // Strand joins and end its task
-	  if (job->is_maximal()) {
-	    lock (cur, thread_id);
-	    cur->_occupied -= job->size(cur->_block_size);
-	  }
+		if (job->is_maximal()) {
+			lock (cur, thread_id);
+			cur->_occupied -= job->size(cur->_block_size);
+		}
 	}
 	release_locks (thread_id);
 
 	/* Last job done in the system */
 	if (job->parent_fork()==NULL && deactivate) {
-	  //print_tree (_tree->_root, _tree->_num_levels, _tree->_num_levels);
-	  //std::cout<<"Finished root task at thread: "<<thread_id<<std::endl;
+		//print_tree (_tree->_root, _tree->_num_levels, _tree->_num_levels);
+		//std::cout<<"Finished root task at thread: "<<thread_id<<std::endl;
 	}
 }
 
 bool
 HR2Scheduler::fit_job (HR2Job *job, int thread_id, int height, int bucket_level) {
-  Cluster *leaf=_tree->_leaf_array[thread_id];
-  Cluster *cur=leaf;
+	Cluster *leaf=_tree->_leaf_array[thread_id];
+	Cluster *cur=leaf;
 
-  for (int i=0; i<height-bucket_level; ++i) {
-    lock (cur, thread_id);
-    if (cur->_occupied > (1-MU)*(double)cur->_size) {
-      release_locks (thread_id);
-      return false;
-    }
-    cur=cur->_parent;
-  }
+	for (int i=0; i<height-bucket_level; ++i) {
+		lock (cur, thread_id);
+		if (cur->_occupied > (1-MU)*(double)cur->_size) {
+			release_locks (thread_id);
+			return false;
+		}
+		cur=cur->_parent;
+	}
 
-  lluint task_size = job->size (cur->_block_size);
-  assert (task_size <= SIGMA*(cur->_size) || cur->_parent == NULL);
+	lluint task_size = job->size (cur->_block_size);
+	assert (task_size <= SIGMA*(cur->_size) || cur->_parent == NULL);
 
-  if (bucket_level > 0) {
-    assert (!job->is_cont_job());
-    lock (cur, thread_id);
-    if (task_size > cur->_size-cur->_occupied) {
-      release_locks (thread_id);
-      return false;
-    } else {
-      pin (job, cur);
-      assert (job->is_maximal());
-      cur->_occupied += task_size;
-    }
-  } else {
-    assert (job->get_pin_cluster() == cur);
-  }
+	if (bucket_level > 0) {
+		assert (!job->is_cont_job());
+		lock (cur, thread_id);
+		if (task_size > cur->_size-cur->_occupied) {
+			release_locks (thread_id);
+			return false;
+		} else {
+			pin (job, cur);
+			assert (job->is_maximal());
+			cur->_occupied += task_size;
+		}
+	} else {
+		assert (job->get_pin_cluster() == cur);
+	}
 
-  for (Cluster *iter=leaf; iter!=cur ; iter=iter->_parent) {
-    lluint strand_size = ((HR2Job*)job)->strand_size (iter->_block_size);
-    assert (has_lock (iter, thread_id));
-    assert (iter->_occupied <= (1-MU)*iter->_size);
-    iter->_occupied += (strand_size<(int)(MU*iter->_size) ? strand_size : (int)(MU*iter->_size));
-  }
+	for (Cluster *iter=leaf; iter!=cur ; iter=iter->_parent) {
+		lluint strand_size = ((HR2Job*)job)->strand_size (iter->_block_size);
+		assert (has_lock (iter, thread_id));
+		assert (iter->_occupied <= (1-MU)*iter->_size);
+		iter->_occupied += (strand_size<(int)(MU*iter->_size) ? strand_size : (int)(MU*iter->_size));
+	}
 
-  release_locks(thread_id);
-  return true;
+	release_locks(thread_id);
+	return true;
 }
 
 Job*
@@ -419,21 +419,21 @@ HR2Scheduler::get (int thread_id) {
 
 	for ( Cluster *cur=_tree->_leaf_array[thread_id]->_parent;
 	      cur!=NULL; cur=cur->_parent,++height) {
-	  int level = cur->_buckets->get_job_from_bucket(&job, 0, child_id);
-	  while (level !=-1) {
-	    if (fit_job (job, thread_id, height, level)==true) {
-	      release_locks(thread_id);
-	      return job;
-	    } else {
-		cur->_buckets->return_to_queue (job, level, child_id);
-	    }
-	    level = cur->_buckets->get_job_from_bucket(&job, 1+level, child_id);
-	  }
+		int level = cur->_buckets->get_job_from_bucket(&job, 0, child_id);
+		while (level !=-1) {
+			if (fit_job (job, thread_id, height, level)==true) {
+				release_locks(thread_id);
+				return job;
+			} else {
+				cur->_buckets->return_to_queue (job, level, child_id);
+			}
+			level = cur->_buckets->get_job_from_bucket(&job, 1+level, child_id);
+		}
 
-	  if ( cur->_occupied > (int)((1-MU)* cur->_size) )
-	    return NULL;
+		if ( cur->_occupied > (int)((1-MU)* cur->_size) )
+			return NULL;
 
-	  child_id = cur->_sibling_id;
+		child_id = cur->_sibling_id;
 	}
 	return NULL;
 }

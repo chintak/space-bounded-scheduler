@@ -31,7 +31,7 @@
 #include "transpose.hh"
 #include "sampleSort.hh"
 #include "string.h"
-//#include "utils.hh"
+#include "utils.hh"
 #include "parse-args.hh"
 //#include "getperf.hh"
 
@@ -86,13 +86,15 @@ main (int argv, char **argc) {
   stripe(space,allocSize<E>(LEN,exp));
 
   SizedJob* root_job = new SampleSort<E*, PtrCmpLess<E*> >(A_ptr,LEN,PtrCmpLess<E*>(),exp,NULL);//space);
-  std::cout<<"Len: "<<LEN<<" exp: "<<exp<<std::endl;
+  std::cout<<"Len: "<<LEN<<"\nexp: "<<exp<<std::endl;
   std::cout<<"Size: "<<root_job->size(64)/1000000.<<"MB"<<std::endl;  
   flush_cache(num_procs,sizes[1]);
 
   startTime();
+  START_PAPI_COUNTER;
   tp_init (num_procs, map, sched, root_job);
   tp_sync_all ();
+  READ_PAPI_COUNTER;
   nextTime ("SampleSort, from the driver program");
 
 if(false) {

@@ -3,6 +3,7 @@
 #include "ThreadPool.hh"
 #include "quickSort2.hh"
 #include "parse-args.hh"
+#include "utils.hh"
 
 typedef double E;
 
@@ -34,10 +35,12 @@ main (int argv, char **argc) {
 
   flush_cache(num_procs,sizes[1]);  
 
+  START_PAPI_COUNTER;
   startTime();
   tp_init (num_procs, map, sched, rootJob);
   tp_sync_all ();
   nextTime("QuickSort, measured from driver program");
+  READ_PAPI_COUNTER;
 
   std::cout<<"Checking: "<<std::endl;
   if (checkSort (A,LEN,less_equal<E>()))

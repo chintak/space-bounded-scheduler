@@ -30,6 +30,7 @@
 #include "machine-config.hh"
 #include "quadTreeSort.hh"
 #include "parse-args.hh"
+#include "utils.hh"
 
 //Leave this as a power of 2 if you want the test code to be correct.
 #define MAX_COORD (1<<15)
@@ -76,14 +77,16 @@ int main (int argv, char **argc) {
   Scheduler *sched=create_scheduler (argv, argc);
   SizedJob* rootJob = new QuadTreeSort<E> (A,bx,LEN,
 					     compared, tl_pos, tr_pos, bl_pos, br_pos, B);
-  std::cout<<"Len: "<<LEN<<std::endl;  
+  std::cout<<"Len: "<<LEN << std::endl;  
   std::cout<<"Root Job Size: "<<rootJob->size(64)/1000000<<"MB"<<std::endl;
 
   flush_cache(num_procs,sizes[1]);  
 
   startTime();
+  START_PAPI_COUNTER;
   tp_init (num_procs, map, sched, rootJob);
   tp_sync_all ();
+  READ_PAPI_COUNTER;
   nextTime("QuadTreeSort, measured from driver program");
 
   /* 
