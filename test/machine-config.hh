@@ -1,5 +1,27 @@
 #include <unistd.h>
 
+#define shantanu int num_procs=8;					\
+  int num_levels = 3;							\
+  int fan_outs[4] = {1,4,2,1};						\
+  lluint sizes[4] = {0, 3*(1<<21), 1<<18, 1<<15};			\
+  int block_sizes[4] = {64,64,64,64};					\
+  uint map[8] = {0,4,1,5,2,6,3,7};
+
+#define stampede int num_procs=16;					\
+  int num_levels = 3;							\
+  int fan_outs[4] = {2,8,1,1};						\
+  lluint sizes[4] = {0, 5<<22, 1<<18, 1<<15};				\
+  int block_sizes[4] = {64,64,64,64};					\
+  uint map[16] = {0,2,4,6,8,10,12,14,					\
+		  1,3,5,7,9,11,13,15};
+
+#define stampede_single int num_procs=2;				\
+  int num_levels = 3;							\
+  int fan_outs[4] = {2,8,1,1};						\
+  lluint sizes[4] = {0, 5<<22, 1<<18, 1<<15};				\
+  int block_sizes[4] = {64,64,64,64};					\
+  uint map[2] = {0,2};
+
 #define SEQUENTIAL int num_procs=1;		\
   int num_levels = 2;				\
   int fan_outs[2] = {1,1};			\
@@ -69,21 +91,6 @@
   lluint sizes[2] = {0, 1<<23};			\
   int block_sizes[2] = {8, 8};			\
   uint map[8] = {0,1,2,3,4,5,6,7};
-
-#define stampede int num_procs=16;					\
-  int num_levels = 3;							\
-  int fan_outs[4] = {2,8,1,1};						\
-  lluint sizes[4] = {0, 5<<22, 1<<18, 1<<15};				\
-  int block_sizes[4] = {64,64,64,64};					\
-  uint map[16] = {0,2,4,6,8,10,12,14,					\
-		  1,3,5,7,9,11,13,15};
-
-#define stampede_single int num_procs=2;				\
-  int num_levels = 3;							\
-  int fan_outs[4] = {2,8,1,1};						\
-  lluint sizes[4] = {0, 5<<22, 1<<18, 1<<15};				\
-  int block_sizes[4] = {64,64,64,64};					\
-  uint map[2] = {0,2};
 
 #define teach_twosockets int num_procs=16;                    \
 		int num_levels = 3;                            \
