@@ -13,22 +13,28 @@ logname=$WORK/space-bounded-scheduler/logs/$1_output_$2
 #echo "  L1_TCM,   L2_TCM,   L3_TCM,   L1_DCM" > $logname
 echo "---------------------------------------------" > $logname
 PERF='perf stat -e L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses,ref-cycles --append -r 1'
-bin="$PERF -o $logname ./matMul"
-# $bin 2 32  &>> $logname
-# $bin 2 64  &>> $logname
-# $bin 2 128  &>> $logname
-# $bin 2 256  &>> $logname
-# $bin 2 512  &>> $logname
-# $bin 2 1024  &>> $logname
-# $bin 2 2048  &>> $logname
-$bin 2 4096  &>> $logname
-$bin W 4096  &>> $logname
-$bin 2 8192  &>> $logname
-$bin W 8192  &>> $logname
-$bin 2 16384  &>> $logname
-$bin W 16384  &>> $logname
-$bin 2 65536  &>> $logname
-$bin W 65536  &>> $logname
+bin="$PERF -o $logname"
+declare -a sched=("W" "2" "6")
+
+for i in "${sched[@]}"; do
+    $bin ./matMul $i 5120 &>> $logname
+done
+
+for i in "${sched[@]}"; do
+    $bin ./quickSort $i 100000000 &>> $logname
+done
+
+for i in "${sched[@]}"; do
+    $bin ./sampleSort $i 100000000 &>> $logname
+done
+
+for i in "${sched[@]}"; do
+    $bin ./awareSampleSort $i 100000000 &>> $logname
+done
+
+for i in "${sched[@]}"; do
+    $bin ./quadTreeSort $i 100000000 &>> $logname
+done
 
 # bin=matMul
 # echo "========== $bin ==========" >> $logname
