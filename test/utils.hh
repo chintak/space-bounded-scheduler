@@ -6,7 +6,7 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdlib.h>
-#include <papi.h>
+//#include <papi.h>
 
 #if defined(__APPLE__)
 #define PTCMPXCH "  cmpxchgl %2,%1\n"

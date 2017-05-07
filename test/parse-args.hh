@@ -3,7 +3,7 @@
 #include "errno.h"
 void
 print_usage () {
-      std::cerr<<"Usage: cmd <Sched:W/P/H/2/3/4> <args>"<<std::endl;
+      std::cerr<<"Usage: cmd <Sched:W/P/H/2/3/4/5/6> <args>"<<std::endl;
 }
 
 FIND_MACHINE;
@@ -31,6 +31,8 @@ create_scheduler (int argv, char **argc) {
       sched = new HR4Scheduler (num_procs, num_levels, fan_outs, sizes, block_sizes);
      else if (*argc[1] == '5')
        sched = new HR2Scheduler (num_procs, num_levels, fan_outs, sizes, block_sizes, 1);
+     else if (*argc[1] == '6')
+       sched = new HR6Scheduler (num_procs, num_levels, fan_outs, sizes, block_sizes, 1);
      else {
        print_usage();
        exit(-1);

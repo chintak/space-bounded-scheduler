@@ -45,6 +45,7 @@
 #include "HR2Scheduler.hh"
 #include "HR3Scheduler.hh"
 #include "HR4Scheduler.hh"
+#include "HR6Scheduler.hh"
 
 #include "gettime.hh"
 //#include "libperf.h"
