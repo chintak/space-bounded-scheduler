@@ -169,10 +169,10 @@ public:
     if (_size==0) _size = 1L << 45;
   }
   
-  int add_job_to_bucket (E job, int child_id) { // return bucket level
+  int add_job_to_bucket (E job, int child_id) { // return bucket level  
     lluint task_size = job->size(_block_size);
     for (int i=0; i<_num_levels; ++i) {
-      if ((double)task_size > _sigma*(double)_thresholds[i+1]) {
+      if ((double)task_size > _sigma*(double)_thresholds[i+1]) { //thresholds are cache sizes //finds the just biggest cache for bucket
 	_queues[i]->push_front (job);
 	return i;
       }
@@ -180,10 +180,12 @@ public:
     assert(false);exit(-1);
   }
   
-  int get_job_from_bucket (E* ret, int min_level, int child_id) { // return bucket level
-    for (int i=min_level; i<_num_levels; ++i) 
-      if (true == _queues[i]->safepop_front(ret)) 
-	return i;
+  int get_job_from_bucket (E* ret, int max_level, int child_id) { // return bucket level
+    	if(max_level = -1){max_level = _num_levels;}
+	for (int i=max_level-1; i>=0; i--) {/////////////############can we change it to other way round
+      		if (true == _queues[i]->safepop_front(ret)) 
+		{return i;}
+	}
     return -1;
   }
   
