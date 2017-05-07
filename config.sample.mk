@@ -1,7 +1,7 @@
 CFLAGS	=	-D_REENTRANT -O
-LFLAGS	=	-lpthread -lrt -lm -L/opt/apps/papi/5.3.0/x86_64/lib -lpapi #-ltcmalloc
+LFLAGS	=	-lpthread -lrt -lm #-ltcmalloc
 MKL_LFLAGS =	-L $(MKLROOT)/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core
-IFLAGS  =       -I../src -I../IntelPCM -I$(MKLROOT)/include -I/opt/apps/papi/5.3.0/x86_64/include -pthread
+IFLAGS  =       -I../src -I../IntelPCM -I$(MKLROOT)/include -pthread
 LIBVER	=       decentrallibthrpool.a
 AR	=	ar rc
 RANLIB	=	ranlib

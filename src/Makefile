@@ -9,7 +9,7 @@ MONITORS =  gettime.hh threadTimers.hh
 SOURCES = $(HEADERS) $(IMPLEMENTATION) $(MONITORS)
 
 COMMONOBJECTS = Thread.o Job.o
-DECENTRALOBJECTS = $(COMMONOBJECTS) HR1Scheduler.o HR2Scheduler.o HR3Scheduler.o HR4Scheduler.o  WSScheduler.o DecentralThreadPool.o DecentralFork.o DecentralScheduler.o
+DECENTRALOBJECTS = $(COMMONOBJECTS) HR2Scheduler.o HR6Scheduler.o DecentralThreadPool.o DecentralFork.o DecentralScheduler.o # HR1Scheduler.o HR3Scheduler.o HR4Scheduler.o WSScheduler.o
 OBJECTS = $(COMMONOBJECTS)  Fork.o Scheduler.o
 
 all: decentrallibthrpool.a 
