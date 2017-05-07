@@ -27,7 +27,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <math.h>
-#include <papi.h>
 
 #include "Job.hh"
 #include "matMul.hh"
