@@ -114,7 +114,6 @@ int
 main (int argv, char **argc) {
 	int n = (-1==get_size(argv, argc,2)) ? (1<<10) : get_size(argv, argc,2);
 	Scheduler *sched=create_scheduler(argv, argc);
-
 	E* space = newA(E, 3*n*n);
 	stripe((char*)space,3*sizeof(E)*n*n);
 
@@ -127,14 +126,14 @@ main (int argv, char **argc) {
 		C.Values[i] = 0;
 	}
 	MatMulJob<E> * root = new MatMulJob<E>(A,B,C,0,false);
-	cout << "Len: " << n << endl;
 
+	printf("bin: %s\nN: %d\n", "matMul", n);
 	startTime();
 	START_PAPI_COUNTER;
 	tp_init(num_procs, map, sched, root);
 	tp_sync_all();
 	READ_PAPI_COUNTER;
-	nextTime("Matrix multiply : ");
+	nextTime("Total time: ");
 
 	//checkMatMul<E>(A,B,C);
 }

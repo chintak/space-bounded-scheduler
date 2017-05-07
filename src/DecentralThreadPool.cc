@@ -311,7 +311,7 @@ void
 ThreadPool::sync_all () {
 	_idle_cond.lock();
 	_idle_cond.wait();
-	std::cerr<<__func__<<std::endl;
+	//std::cerr<<__func__<<std::endl;
 	_idle_cond.unlock();
 }
 

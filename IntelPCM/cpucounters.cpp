@@ -849,6 +849,7 @@ PCM::PCM() :
 
        } catch(...)
        {
+				 /*
            std::cerr << "Can not read memory controller counter information from PCI configuration space. Access to memory bandwidth counters is not possible." << std::endl;
            #ifdef _MSC_VER
            // TODO: add message here
@@ -856,6 +857,7 @@ PCM::PCM() :
            #ifdef __linux__
            std::cerr << "You must be root to access these SandyBridge/IvyBridge counters in PCM. " << std::endl;
            #endif 
+				 */
        }
     }
 #ifdef PCM_USE_PERF

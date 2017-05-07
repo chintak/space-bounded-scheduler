@@ -180,6 +180,6 @@ static long _t1;
 #define NextTime(_string,_flag) if (_flag) {std::cout << _string << ": " << (example_get_time() - _t1) / 1000.f << " seconds" << "; " << std::endl; _t1 = example_get_time();}
 
 #define startTime() _t1=example_get_time();
-#define nextTime(_string) {std::cout << _string << ": " << (example_get_time() - _t1) << " mseconds" << "; " << std::endl; _t1 = example_get_time();}
+#define nextTime(_string) {printf("%s %8ld ms\n", _string, (example_get_time() - _t1)); _t1 = example_get_time();}
 #endif // CILK_EXAMPLE_UTIL_GETTIME_H_INCLUDED
 

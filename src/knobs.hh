@@ -27,7 +27,7 @@
 #ifndef SCHED_KNOBS 
 #define SCHED_KNOBS
 
-#define LOG 0
+#define LOG 1
 
 #define COUNTERS_ENABLED false
 

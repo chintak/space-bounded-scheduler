@@ -1,14 +1,14 @@
 #include <unistd.h>
 
 #define shantanu int num_procs=8;					\
-  int num_levels = 3;							\
+  int num_levels = 4;							\
   int fan_outs[4] = {1,4,2,1};						\
   lluint sizes[4] = {0, 3*(1<<21), 1<<18, 1<<15};			\
   int block_sizes[4] = {64,64,64,64};					\
   uint map[8] = {0,4,1,5,2,6,3,7};
 
 #define stampede int num_procs=16;					\
-  int num_levels = 3;							\
+  int num_levels = 4;							\
   int fan_outs[4] = {2,8,1,1};						\
   lluint sizes[4] = {0, 5<<22, 1<<18, 1<<15};				\
   int block_sizes[4] = {64,64,64,64};					\
@@ -16,7 +16,7 @@
 		  1,3,5,7,9,11,13,15};
 
 #define stampede_single int num_procs=2;				\
-  int num_levels = 3;							\
+  int num_levels = 4;							\
   int fan_outs[4] = {2,8,1,1};						\
   lluint sizes[4] = {0, 5<<22, 1<<18, 1<<15};				\
   int block_sizes[4] = {64,64,64,64};					\

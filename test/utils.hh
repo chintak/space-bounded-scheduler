@@ -23,27 +23,29 @@ static int __jj =  mallopt(M_TRIM_THRESHOLD,-1);
 #define MB_2 (2*MB_1)
 
 
-#define START_PAPI_COUNTER						\
-	int ret;							\
-	const int NUM_EVENTS = 4;					\
-	int events[10] = {						\
-		PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM,			\
-		PAPI_L1_DCM, PAPI_TOT_CYC };				\
-	long long values[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};		\
-	if ((ret = PAPI_start_counters(events, NUM_EVENTS)) != PAPI_OK) { \
-		fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret)); \
-		exit(1);						\
-	}
+#define START_PAPI_COUNTER ;
+//#define START_PAPI_COUNTER					\
+	// int ret;							\
+	// const int NUM_EVENTS = 4;					\
+	// int events[10] = {						\
+	// 	PAPI_L1_TCM, PAPI_L2_TCM, PAPI_L3_TCM,			\
+	// 	PAPI_L1_DCM, PAPI_TOT_CYC };				\
+	// long long values[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};		\
+	// if ((ret = PAPI_start_counters(events, NUM_EVENTS)) != PAPI_OK) { \
+	// 	fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret)); \
+	// 	exit(1);						\
+	// }
 #define START_PAPI_COUNTERS START_PAPI_COUNTER;
 
-#define READ_PAPI_COUNTER						\
-	if ((ret = PAPI_read_counters(values, NUM_EVENTS)) != PAPI_OK) { \
-		fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret)); \
-		exit(1);						\
-	}								\
-	printf("  L1_TCM,   L2_TCM,   L3_TCM,   L1_DCM\n");		\
-	printf("%8lld, %8lld, %8lld, %8lld\n", values[0], values[1],	\
-	       values[2], values[3]);
+#define READ_PAPI_COUNTER	;
+// #define READ_PAPI_COUNTER						\
+// 	if ((ret = PAPI_read_counters(values, NUM_EVENTS)) != PAPI_OK) { \
+// 		fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret)); \
+// 		exit(1);						\
+// 	}								\
+// 	/* printf("  L1_TCM,   L2_TCM,   L3_TCM,   L1_DCM\n");	*/		\
+// 	printf("%8lld, %8lld, %8lld, %8lld", values[0], values[1],	\
+// 	       values[2], values[3]);
 	// printf("Level 1 cache misses: %lld\n", values[0]);		\
 	// printf("Level 2 cache misses: %lld\n", values[1]);		\
 	// printf("Level 3 cache misses: %lld\n", values[2]);		\
